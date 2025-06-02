@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PR AI Persona POC</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        textarea { width: 100%; }
+        .response { background: #f9f9f9; border: 1px solid #ddd; padding: 1em; margin-top: 1em; }
+        label { font-weight: bold; }
+        .container { max-width: 600px; margin: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PR Journalist AI Persona Demo</h1>
+        <form method="post">
+            <label for="pitch">Enter your pitch:</label><br>
+            <textarea name="pitch" rows="4" required>{{ pitch }}</textarea><br><br>
+            <label for="journalist">Choose a journalist:</label>
+            <select name="journalist">
+                {% for j in journalists %}
+                    <option value="{{j.id}}" {% if selected and selected.id == j.id %}selected{% endif %}>{{j.name}}</option>
+                {% endfor %}
+            </select><br><br>
+            <button type="submit">Submit</button>
+        </form>
+        {% if response %}
+            <div class="response">
+                <h2>AI Persona Response:</h2>
+                <p>{{response}}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

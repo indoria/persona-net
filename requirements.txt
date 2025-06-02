@@ -1,0 +1,6 @@
+Flask
+SQLAlchemy
+spacy
+transformers
+torch
+nltk

@@ -1,0 +1,111 @@
+%% Enterprise-grade Architecture Diagram for PR AI Persona Platform
+
+---
+%% Top-level boundary: System
+graph TD
+
+    %% ========== User Interface Layer ==========
+    subgraph UI["User Interface (Web UI)"]
+        UI_Form[Form Input<br>• Capture Pitch<br>• Select Persona]
+        UI_Display[Response Display<br>• Shows Persona Replies]
+    end
+
+    %% ========== Application Layer ==========
+    subgraph APP["Flask Application Layer (app.py)"]
+        Route_index[/Route: index()/
+        - Public:
+            + GET/POST /
+            + Handles pitch/response cycle
+        - State:
+            + Session
+            + Request Data
+        ]
+    end
+
+    %% ========== AI Persona Engine ==========
+    subgraph AI["AI Persona Engine (ai_persona.py)"]
+        PersonaResponse[persona_response()
+        - Public:
+            + persona_response(journalist, pitch_text, conv_history)
+        ]
+        ExtractTopics[extract_topics()
+        - Private:
+            + extract_topics(pitch_text)
+        ]
+    end
+
+    %% ========== NLP & ML Layer ==========
+    subgraph NLP["NLP & Summarization"]
+        Spacy[spaCy NER
+        - Public:
+            + nlp(text) → doc
+        ]
+        Summarizer[Huggingface Transformer
+        - Public:
+            + summarizer(text)
+        ]
+    end
+
+    %% ========== Data & Knowledge Layer ==========
+    subgraph ORM["Persistence & Knowledge Graph (models.py, SQLite)"]
+        Journalists[Journalist Table
+        - State:
+            + name
+            + interests
+            + style
+            + sample_articles
+        - Public:
+            + Add/query/update
+        ]
+        Interactions[Interaction Table
+        - State:
+            + journalist_id
+            + pitch
+            + response
+        - Public:
+            + Add/query/update
+        ]
+    end
+
+    %% ========== Data Store ==========
+    DB[(SQLite DB File)]
+
+    %% ========== Data Flow & Interactions ==========
+
+    %% UI <-> Flask
+    UI_Form --"POST pitch, persona_id"--> Route_index
+    Route_index --"Render response"--> UI_Display
+
+    %% Flask <-> ORM
+    Route_index --"Query journalists, log interaction"--> Journalists
+    Route_index --"Create interaction"--> Interactions
+
+    %% ORM <-> DB
+    Journalists <--> DB
+    Interactions <--> DB
+
+    %% Flask <-> AI Persona Engine
+    Route_index --"Call persona_response()"--> PersonaResponse
+
+    %% AI Persona Engine <-> NLP
+    PersonaResponse --"extract_topics()"--> ExtractTopics
+    ExtractTopics --"spaCy NER"--> Spacy
+    PersonaResponse --"summarizer()"--> Summarizer
+
+    %% Knowledge Graph connection (implicit with Journalists Table)
+    %% (can be expanded in future with Neo4j, etc.)
+
+    %% ========== Legend ==========
+    classDef classUI fill:#f0f8ff,stroke:#333,stroke-width:1px;
+    classDef classAPP fill:#d6eaff,stroke:#333,stroke-width:1px;
+    classDef classAI fill:#f5e6ff,stroke:#333,stroke-width:1px;
+    classDef classNLP fill:#eaffea,stroke:#333,stroke-width:1px;
+    classDef classORM fill:#fff5e6,stroke:#333,stroke-width:1px;
+    classDef classDB fill:#f2f2f2,stroke:#333,stroke-width:2px;
+
+    class UI_Form,UI_Display classUI;
+    class Route_index classAPP;
+    class PersonaResponse,ExtractTopics classAI;
+    class Spacy,Summarizer classNLP;
+    class Journalists,Interactions classORM;
+    class DB classDB;

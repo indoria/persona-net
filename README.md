@@ -24,6 +24,9 @@ python3 -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
+
+pip show flask
+python -m flask --version
 ```
 
 ### 3. Seed the Database

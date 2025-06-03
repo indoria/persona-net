@@ -1,0 +1,47 @@
+flowchart TD
+    %% User Interface Layer
+    subgraph UI [User Interface Web/UI]
+        UI_Form["Form Input<br/>- Capture Pitch<br/>- Select Persona"]
+        UI_Display["Response Display<br/>- Shows Persona Replies"]
+    end
+
+    %% Flask Application Layer
+    subgraph Flask [Flask Application app.py]
+        Route_index["index() Route<br/>- GET/POST<br/>- Handles pitch/response"]
+    end
+
+    %% AI Persona Engine
+    subgraph AI [AI Persona Engine ai_persona.py]
+        PersonaResponse["persona_response(journalist, pitch_text, conv_history)<br/>Public"]
+        ExtractTopics["extract_topics(pitch_text)<br/>Private"]
+    end
+
+    %% NLP & ML Layer
+    subgraph NLP [NLP & Summarization]
+        Spacy["spaCy NER<br/>nlp(text)"]
+        Summarizer["Huggingface Summarizer<br/>summarizer(text)"]
+    end
+
+    %% Persistence & Knowledge Layer
+    subgraph ORM [Persistence & Knowledge Graph models.py, SQLite]
+        Journalists["Journalist Table<br/>- name, interests, style, articles"]
+        Interactions["Interaction Table<br/>- journalist_id, pitch, response"]
+    end
+
+    DB["SQLite DB File"]
+
+    %% Data Flow
+    UI_Form -- "POST pitch, persona_id" --> Route_index
+    Route_index -- "Render response" --> UI_Display
+
+    Route_index -- "Query journalists" --> Journalists
+    Route_index -- "Log interaction" --> Interactions
+
+    Journalists <--> DB
+    Interactions <--> DB
+
+    Route_index -- "Call persona_response()" --> PersonaResponse
+
+    PersonaResponse -- "extract_topics()" --> ExtractTopics
+    ExtractTopics -- "spaCy NER" --> Spacy
+    PersonaResponse -- "summarizer()" --> Summarizer

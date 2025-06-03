@@ -1,0 +1,50 @@
+flowchart TD
+    %% ========== User Interface Layer ==========
+    subgraph "User Interface (Web UI)"
+        UI_Form["Form Input<br>• Capture Pitch<br>• Select Persona"]
+        UI_Display["Response Display<br>• Shows Persona Replies"]
+    end
+
+    %% ========== Application Layer ==========
+    subgraph "Flask Application Layer (app.py)"
+        Route_index["Route: index()<br>- Public:<br>  • GET/POST /<br>  • Handles pitch/response cycle<br>- State:<br>  • Session<br>  • Request Data"]
+    end
+
+    %% ========== AI Persona Engine ==========
+    subgraph "AI Persona Engine (ai_persona.py)"
+        PersonaResponse["persona_response(journalist, pitch_text, conv_history)<br>- Public"]
+        ExtractTopics["extract_topics(pitch_text)<br>- Private"]
+    end
+
+    %% ========== NLP & ML Layer ==========
+    subgraph "NLP & Summarization"
+        Spacy["spaCy NER<br>- Public: nlp(text) → doc"]
+        Summarizer["Huggingface Summarizer<br>- Public: summarizer(text)"]
+    end
+
+    %% ========== Data & Knowledge Layer ==========
+    subgraph "Persistence & Knowledge Graph (models.py, SQLite)"
+        Journalists["Journalist Table<br>- State:<br>  • name<br>  • interests<br>  • style<br>  • sample_articles<br>- Public: Add/query/update"]
+        Interactions["Interaction Table<br>- State:<br>  • journalist_id<br>  • pitch<br>  • response<br>- Public: Add/query/update"]
+    end
+
+    DB["SQLite DB File"]
+
+    %% Data Flow
+    UI_Form -- "POST pitch, persona_id" --> Route_index
+    Route_index -- "Render response" --> UI_Display
+
+    Route_index -- "Query journalists, log interaction" --> Journalists
+    Route_index -- "Create interaction" --> Interactions
+
+    Journalists <--> DB
+    Interactions <--> DB
+
+    Route_index -- "Call persona_response()" --> PersonaResponse
+
+    PersonaResponse -- "extract_topics()" --> ExtractTopics
+    ExtractTopics -- "spaCy NER" --> Spacy
+    PersonaResponse -- "summarizer()" --> Summarizer
+
+    %% Knowledge Graph connection (implicit with Journalists Table)
+    %% (for future expansion with Neo4j, etc.)

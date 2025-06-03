@@ -238,6 +238,25 @@ session.commit()
 
 ---
 
-## Contact
-
-*Author: [Your Name], June 2025*
+## PR pitch components
+Key elements of an effective PR pitch:
+Compelling Subject Line:
+A strong subject line is crucial to grab the journalist's attention and encourage them to open the pitch.
+Newsworthy Angle:
+The pitch should highlight why the story is relevant and timely for the media outlet's audience.
+Conciseness:
+The message should be brief and to the point, making it easy for journalists to quickly understand the key details.
+Clear Call to Action:
+Specify what you want the journalist to do, such as schedule an interview, review a product, or cover an event.
+Multimedia:
+Include relevant visuals like photos, videos, or infographics to make the pitch more engaging.
+Expert Availability:
+Offer access to company representatives or experts for interviews to add credibility to the story.
+Data and Research:
+Support your pitch with relevant data and research findings to strengthen your argument.
+Targeted Approach:
+Research the journalist's beat and tailor the pitch to their specific interests and audience.
+Online Media Kit:
+Include a link to an online media kit with additional information about the company, product, or event.
+Follow-Up:
+After sending the pitch, follow up with journalists to ensure they received it and answer any questions they may have.

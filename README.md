@@ -44,6 +44,9 @@ Visit: http://127.0.0.1:5000
 
 ---
 
+## en_core_web_sm
+en_core_web_sm is a small English language model in spaCy, a popular Python library for Natural Language Processing (NLP). It is a multi-task Convolutional Neural Network (CNN) trained on the OntoNotes dataset. 
+
 ## Data Acquisition & Annotation Guide
 
 ### Step 1: Acquire Persona Data
@@ -73,8 +76,13 @@ Visit: http://127.0.0.1:5000
 ├── models.py
 ├── seed_personas.py
 ├── requirements.txt
+├── mmd/
+│   └── mermaid diagrams
 ├── templates/
 │   └── index.html
+├── .gitignore
+├── resources.md # A list of useful AI resources
+├── POC_README.md
 └── README.md
 ```
 

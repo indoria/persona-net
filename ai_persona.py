@@ -19,12 +19,14 @@ def persona_response(journalist, pitch_text, conversation_history=None):
     except Exception:
         summary = pitch_text[:50] + "..."
     interests = journalist.interests.split(',')
-    # Basic persona response templates
+
+    starter = "From what I userstand : " + summary + "<br />"
+
     templates = [
-        f"I'm interested in your pitch about {' and '.join(topics)}. Could you elaborate on how this relates to {random.choice(interests).strip()}?",
-        f"As someone who writes in a {journalist.style} style, I find your product intriguing. What sets it apart from others?",
-        f"Thank you for reaching out. Can you provide more background on your target audience for this launch?",
-        f"This sounds interesting, especially since I cover {', '.join(interests)}. What makes this newsworthy right now?"
+        f"{starter} <br> I'm interested in your pitch about {' and '.join(topics)}. Could you elaborate on how this relates to {random.choice(interests).strip()}?",
+        f"{starter} <br> As someone who writes in a {journalist.style} style, I find your product intriguing. What sets it apart from others?",
+        f"{starter} <br> Thank you for reaching out. Can you provide more background on your target audience for this launch?",
+        f"{starter} <br> This sounds interesting, especially since I cover {', '.join(interests)}. What makes this newsworthy right now?"
     ]
     # Use conversation history for future expansion
     return random.choice(templates)

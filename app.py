@@ -10,7 +10,7 @@ engine = create_engine('sqlite:///pr_platform.db')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
-@app.before_first_request
+@app.before_request
 def log_server_info():
     host = request.host.split(':')[0]
     port = request.host.split(':')[1] if ':' in request.host else '80'

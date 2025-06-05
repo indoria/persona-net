@@ -2,7 +2,6 @@ import random
 import spacy
 from transformers import pipeline
 
-# Load spaCy for NER and basic NLP
 nlp = spacy.load("en_core_web_sm")
 # Transformers summarizer
 summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6", framework="pt")

@@ -9,9 +9,22 @@
         label { font-weight: bold; }
         .container { max-width: 700px; margin: auto; }
         select, textarea { margin-bottom: 1em; }
+        .loader {
+            display: none;
+            border: 6px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 6px solid #3498db;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
     </style>
     <script>
-        // This JS populates the textarea with the selected pitch
         function setPitchFromSelector() {
             var selector = document.getElementById('pitch_selector');
             var textarea = document.getElementById('pitch_textarea');
@@ -19,12 +32,51 @@
                 textarea.value = selector.value;
             }
         }
+
+        function submitForm(event) {
+            event.preventDefault();
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('responses').innerHTML = '';
+            let pitch = document.getElementById('pitch_textarea').value;
+            let journalistEls = document.getElementById('journalist');
+            let journalists = Array.from(journalistEls.selectedOptions).map(opt => opt.value);
+
+            fetch('/query_persona', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    pitch: pitch,
+                    journalists: journalists
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loader').style.display = 'none';
+                let html = '';
+                if (data.responses && data.responses.length > 0) {
+                    data.responses.forEach(function(resp) {
+                        html += `<div class="response"><h2>${resp.name}</h2><p>${resp.response}</p></div>`;
+                    });
+                } else {
+                    html = "<div class='response'>No response received.</div>";
+                }
+                document.getElementById('responses').innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('responses').innerHTML = "<div class='response'>Error occurred. Try again.</div>";
+            });
+        }
     </script>
 </head>
 <body>
+    {% include "nav.html" %}
     <div class="container">
         <h1>PR Journalist AI Persona Demo</h1>
-        <form method="post">
+        <form id="prForm" onsubmit="submitForm(event)">
             <label for="pitch_selector">Select a sample PR pitch:</label><br>
             <select id="pitch_selector" onchange="setPitchFromSelector()">
                 <option value="">-- Choose a sample pitch or write your own below --</option>
@@ -85,22 +137,19 @@ Thank you for your consideration.">Shoply e-commerce analytics tool launch</opti
             <br>
 
             <label for="pitch_textarea">Or write your own pitch:</label><br>
-            <textarea id="pitch_textarea" name="pitch" rows="8" required>{{ pitch }}</textarea><br>
+            <textarea id="pitch_textarea" name="pitch" rows="8" required></textarea><br>
 
-            <label for="journalist">Choose a journalist:</label>
-            <select name="journalist">
+            <label for="journalist">Choose one or more journalists:</label>
+            <select name="journalist" id="journalist" multiple size="4" required>
                 {% for j in journalists %}
-                    <option value="{{j.id}}" {% if selected and selected.id == j.id %}selected{% endif %}>{{j.name}}</option>
+                    <option value="{{j.id}}">{{j.name}}</option>
                 {% endfor %}
-            </select><br><br>
+            </select>
+            <br><br>
             <button type="submit">Submit</button>
         </form>
-        {% if response %}
-            <div class="response">
-                <h2>AI Persona Response:</h2>
-                <p>{{ response|safe }}</p>
-            </div>
-        {% endif %}
+        <div id="loader" class="loader"></div>
+        <div id="responses"></div>
     </div>
 </body>
 </html>

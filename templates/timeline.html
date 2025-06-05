@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona POC Timeline Overview</title>
+    <style>
+        /* All styles are namespaced under the .persona-popup class */
+        .persona-popup {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            box-sizing: border-box;
+            width: 100vw; /* Occupy full viewport width */
+            height: 100vh; /* Occupy full viewport height */
+            overflow-y: auto; /* Enable scrolling for content that exceeds screen height */
+        }
+
+        .persona-popup h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .persona-popup h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+
+        .persona-popup h2 {
+            color: #2c3e50;
+            margin-top: 40px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .persona-popup ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .persona-popup ul li {
+            margin-bottom: 8px;
+        }
+
+        .persona-popup ul li strong {
+            color: #555;
+        }
+
+        .persona-popup .status-legend li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .persona-popup .status-legend li span {
+            margin-left: 5px;
+        }
+
+        .persona-popup .section-divider {
+            border-top: 1px solid #eee;
+            margin: 30px 0;
+        }
+
+        .persona-popup p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .persona-popup a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .persona-popup a:hover {
+            text-decoration: underline;
+        }
+
+        .persona-popup .note {
+            background-color: #fdf5e6;
+            border-left: 5px solid #ffc107;
+            padding: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    {% include "nav.html" %}
+    <div class="persona-popup">
+        <h1>Overview of the timeline for Persona POC</h1>
+
+        <ul class="status-legend">
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Status:</strong> <span style="color: #28a745;">✅ Completed</span></li>
+            <li><strong>Status:</strong> <span style="color: #ffc107;">🟠 In Progress</span></li>
+            <li><strong>Status:</strong> <span style="color: #dc3545;">🔴 Not Started</span></li>
+            <li><strong>Status:</strong> <span style="color: #6c757d;">⏸️ On Hold</span></li>
+            <li><strong>Status:</strong> <span style="color: #808080;">⚪ Not Planned</span></li>
+            <li><strong>Status:</strong> <span style="color: #ff6600;">⚠️ Delayed</span></li>
+            <li><strong>Status:</strong> <span style="color: #17a2b8;">➡️ Deferred</span></li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h3>21-May : Getting to know</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #28a745;">✅ Completed</span></li>
+            <li><strong>Description:</strong> The service is about solving communication problems. Use cases are difficult to address communications, training for a press conference or meet, planning a pitch.</li>
+            <li><strong>Task:</strong> Exploratory : find out how such a system may work. Try figuring out architecure of such system.</li>
+        </ul>
+
+        <h3>22-May - 27-May : Explore implementation options</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #ffc107;">🟠 In Progress</span></li>
+            <li><strong>Description:</strong> Create a spec for system, formulate a development process, plan a deployment. Explore AI engg methodologies.</li>
+            <li><strong>Task:</strong> Exploratory : Current ML state. Find out atomic entities. List potential candidates for the system parts.</li>
+        </ul>
+
+        <h3>28-May : Meet the team, discuss POC specs</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #28a745;">✅ Completed</span></li>
+            <li><strong>Description:</strong> There would be three PR journalist. A pitch would be provided</li>
+            <li><strong>Task:</strong> Set up infrastucture for the app. Go through stanford paper and github repo. Setup a development environment and start work on framework (NLP, Persona identifiers).</li>
+            <li><strong>Resources:</strong>
+                <ul>
+                    <li><a href="https://github.com/joonspk-research/genagents/tree/main?tab=readme-ov-file" target="_blank">Agent Simulation</a></li>
+                    <li><a href="https://get.big-agi.com" target="_blank">Big AGI - agent</a></li>
+                    <li><a href="https://www.syntheticusers.com/science" target="_blank">Synthetic users</a></li>
+                    <li><a href="https://www.sortlist.co.uk/datahub/reports/pr-statistics/" target="_blank">PR stats</a></li>
+                    <li><a href="https://review.firstround.com/heres-what-i-learned-from-working-with-50-pr-firms/" target="_blank">PR gist</a></li>
+                    <li><a href="https://review.firstround.com/how-new-startups-can-win-at-pr-advice-from-a-20-year-comms-career/" target="_blank">PR advice</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>4-May : Show the plan, initial layout</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #ff6600;">⚠️ Delayed</span></li>
+            <li><strong>Description:</strong> Show current state, plan next steps and improvements. <i class="note">Got postponed to 5-May. Ensure better adherence to timeline</i>.</li>
+            <li><strong>Task:</strong> Request for third party softwares (OpenAI key, org github). Research on how to make personas more like real people. <b>Get response structure (parameters of evaluation, and ways of presenting them) of a journalist</b>. List ways of representing a persona (traits etc.)</li>
+        </ul>
+
+        <h3>11-May : Deploy first draft</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Description:</strong> Deploy three personas with some efficiency. List data sources for the personas.</li>
+        </ul>
+
+        <h3>18-May : Persona research</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Description:</strong> Train model with new data. Improve upon architecture to accomodate new data.</li>
+        </ul>
+
+        <h3>25-May : Review</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Description:</strong> Review the POC. Improve UI.</li>
+        </ul>
+
+        <h3>29-May : Review</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Description:</strong> Review improvements.</li>
+        </ul>
+
+        <h3>30-May : Review</h3>
+        <ul>
+            <li><strong>Status:</strong> <span style="color: #999999;">⚪ Planned</span></li>
+            <li><strong>Description:</strong> Review the entire deployment and plan next steps.</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h2>Modules</h2>
+        <ul>
+            <li><strong>Persona Management Module</strong> - Thin persona is ready. Working on enriching it.</li>
+            <li><strong>Pitch analysis</strong> - Currently a simple summarizer, planning on using context from persona (weighted biases, values, triggers, avoidances).</li>
+            <li><strong>Knowledge graph</strong> - TODO - Knowledge of a persona on a given topic.</li>
+            <li><strong>Response module</strong> - Currently based on a template.</li>
+        </ul>
+
+        <h2>Missing</h2>
+        <ul>
+            <li>Weighted response attributes. What attributes does persona uses to assess the pitch, how much of weight do they provide to each attribute. List of such attributes.</li>
+            <li>Response structure. Is free flow text report generated from "weighted response attributes" assessment sufficient.</li>
+        </ul>
+
+        <h2>Still in wild</h2>
+        <ul>
+            <li>Psychology traits : <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" target="_blank">OCEAN model (personality traits)</a></li>
+            <li>Cognitive biases : <a href="https://en.wikipedia.org/wiki/List_of_cognitive_biases" target="_blank">biases</a></li>
+            <li>Fallacies : <a href="https://en.wikipedia.org/wiki/List_of_fallacies" target="_blank">fallacies</a></li>
+            <li>Study : spaCy, Tensorflow.</li>
+        </ul>
+
+        <h2>Requirements</h2>
+        <h3>4-June</h3>
+        <ul>
+            <li>Get PR journalist sample (few names, some work)</li>
+            <li>Discuss persona traits, traits which influence pitch asessment.</li>
+            <li>Discuss persona response</li>
+            <li>Github account</li>
+            <li>OpenAI, ChatGPT, Gemini key (still unsure, will work out)</li>
+            <li>Cloud deployment (Azure, Amazon, Google)</li>
+            <li>Code helpers => <a href="https://github.com/copilot" target="_blank">Copilot</a> , <a href="https://jules.google" target="_blank">text</a> (optional for now)</li>
+        </ul>
+
+        <h2>Further</h2>
+        <ul>
+            <li><a href="https://aistudio.google.com/welcome" target="_blank">Google AI studio</a></li>
+            <li>Veo 3 => Video generation model</li>
+            <li><a href="https://labs.google/flow/about" target="_blank">Videos using Veo 3</a></li>
+        </ul>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Editor with Linting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .editor-wrapper {
+            display: flex;
+            position: relative;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .line-numbers {
+            width: 40px;
+            padding: 16px 8px;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 24px;
+            text-align: right;
+            box-sizing: border-box;
+            user-select: none;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            white-space: pre;
+        }
+
+        textarea {
+            flex-grow: 1;
+            min-height: 300px;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 24px;
+            resize: vertical;
+            padding: 16px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            white-space: pre;
+            word-wrap: normal;
+            overflow: auto;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            min-height: 1.5em;
+        }
+
+        .status-indicator {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator.valid {
+            color: #22c55e;
+        }
+
+        .status-indicator.invalid {
+            color: #ef4444;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        button {
+            transition: all 0.2s ease-in-out;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <div class="container">
+        <h1 class="text-3xl font-bold text-gray-800 text-center mb-4">JSON Editor with Linting</h1>
+
+        <div class="flex items-center justify-between mb-4">
+            <div id="json-status" class="status-indicator invalid">
+                <span class="status-dot"></span>
+                <span>Invalid JSON</span>
+            </div>
+            <button id="format-button"
+                class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Format JSON
+            </button>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">Format Settings</h2>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label for="indentation-spaces" class="text-gray-700">Indentation Spaces:</label>
+                    <input type="number" id="indentation-spaces" min="0" max="10" value="2"
+                        class="w-20 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none" />
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="sort-keys"
+                        class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" />
+                    <label for="sort-keys" class="text-gray-700">Sort Keys Alphabetically</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-wrapper">
+            <div id="line-numbers" class="line-numbers">1</div>
+            <textarea id="json-input" class="w-full" placeholder='Enter JSON here, e.g., {"name": "Alice", "age": 30}'>{
+  "name": "John Doe",
+  "age": 42,
+  "isStudent": false,
+  "courses": [
+    {
+      "title": "History 101",
+      "credits": 3
+    },
+    {
+      "title": "Math 201",
+      "credits": 4
+    }
+  ],
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "zip": "12345"
+  }
+}</textarea>
+        </div>
+
+        <div id="json-error-message" class="error-message"></div>
+
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">How to Use</h2>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>Type or paste JSON into the text area above.</li>
+                <li>The editor will automatically lint (validate) your JSON as you type.</li>
+                <li>Error messages will appear below the text area if the JSON is invalid, including line/column.</li>
+                <li>Use the "Format Settings" to change indentation and sort keys.</li>
+                <li>Click the "Format JSON" button to pretty-print your JSON based on settings.</li>
+                <li>Line numbers are displayed on the left for easy navigation.</li>
+                <li>Open your browser's console to see the parsed JSON value (if valid).</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            function JSONEditor(textarea, options) {
+                this.textarea = textarea;
+                this.options = {
+                    lintDelay: 500,
+                    prettyPrintOnLoad: true,
+                    errorDisplayElementId: null,
+                    lineNumbersElementId: null,
+                    indentationSpacesElementId: null,
+                    sortKeysElementId: null,
+                    onLintResult: null,
+                    onValueChange: null,
+                    ...options
+                };
+
+                this._lintTimeout = null;
+                this._isValid = false;
+                this._parsedValue = null;
+                this._errorDisplayElement = this.options.errorDisplayElementId ?
+                    document.getElementById(this.options.errorDisplayElementId) :
+                    null;
+                this._lineNumbersElement = this.options.lineNumbersElementId ?
+                    document.getElementById(this.options.lineNumbersElementId) :
+                    null;
+                this._indentationSpacesInput = this.options.indentationSpacesElementId ?
+                    document.getElementById(this.options.indentationSpacesElementId) :
+                    null;
+                this._sortKeysCheckbox = this.options.sortKeysElementId ?
+                    document.getElementById(this.options.sortKeysElementId) :
+                    null;
+
+                this._statusIndicator = document.getElementById('json-status');
+                this._statusDot = this._statusIndicator ? this._statusIndicator.querySelector('.status-dot') : null;
+                this._statusText = this._statusIndicator ? this._statusIndicator.querySelector('span:not(.status-dot)') : null;
+
+                this._currentIndentationSpaces = this._indentationSpacesInput ? parseInt(this._indentationSpacesInput.value, 10) : 2;
+                this._currentSortKeys = this._sortKeysCheckbox ? this._sortKeysCheckbox.checked : false;
+
+                this._onInputHandler = this._onInput.bind(this);
+                this._onScrollHandler = this._onScroll.bind(this);
+                this._formatHandler = this.format.bind(this);
+                this._onFormatSettingsChangeHandler = this._onFormatSettingsChange.bind(this);
+
+                this._init();
+            }
+
+            JSONEditor.prototype._init = function () {
+                this.textarea.addEventListener('input', this._onInputHandler);
+                this.textarea.addEventListener('scroll', this._onScrollHandler);
+                window.addEventListener('resize', this._onScrollHandler);
+
+                const formatButton = document.getElementById('format-button');
+                if (formatButton) {
+                    formatButton.addEventListener('click', this._formatHandler);
+                }
+
+                if (this._indentationSpacesInput) {
+                    this._indentationSpacesInput.addEventListener('change', this._onFormatSettingsChangeHandler);
+                    this._indentationSpacesInput.addEventListener('input', this._onFormatSettingsChangeHandler);
+                }
+                if (this._sortKeysCheckbox) {
+                    this._sortKeysCheckbox.addEventListener('change', this._onFormatSettingsChangeHandler);
+                }
+
+                if (this.options.prettyPrintOnLoad) {
+                    this.format();
+                } else {
+                    this._lint();
+                }
+                this._updateLineNumbers();
+            };
+
+            JSONEditor.prototype._onInput = function () {
+                clearTimeout(this._lintTimeout);
+                this._lintTimeout = setTimeout(() => {
+                    this._lint();
+                }, this.options.lintDelay);
+                this._updateLineNumbers();
+            };
+
+            JSONEditor.prototype._onScroll = function () {
+                if (this._lineNumbersElement) {
+                    this._lineNumbersElement.scrollTop = this.textarea.scrollTop;
+                }
+            };
+
+            JSONEditor.prototype._onFormatSettingsChange = function () {
+                if (this._indentationSpacesInput) {
+                    this._currentIndentationSpaces = parseInt(this._indentationSpacesInput.value, 10);
+                    if (isNaN(this._currentIndentationSpaces) || this._currentIndentationSpaces < 0) {
+                        this._currentIndentationSpaces = 0;
+                    }
+                }
+                if (this._sortKeysCheckbox) {
+                    this._currentSortKeys = this._sortKeysCheckbox.checked;
+                }
+                this.format();
+            };
+
+            JSONEditor.prototype._updateLineNumbers = function () {
+                if (!this._lineNumbersElement) return;
+
+                const lines = this.textarea.value.split('\n');
+                const numLines = lines.length;
+                let lineNumbersHtml = '';
+                for (let i = 1; i <= numLines; i++) {
+                    lineNumbersHtml += `${i}\n`;
+                }
+                this._lineNumbersElement.textContent = lineNumbersHtml;
+                this._onScroll();
+            };
+
+            JSONEditor.prototype._lint = function () {
+                const jsonString = this.textarea.value;
+                let newParsedValue = null;
+                let error = null;
+                let errorMessage = '';
+
+                try {
+                    if (jsonString.trim() === '') {
+                        newParsedValue = null;
+                        this._isValid = true;
+                    } else {
+                        newParsedValue = JSON.parse(jsonString);
+                        this._isValid = true;
+                    }
+                } catch (e) {
+                    this._isValid = false;
+                    error = e;
+
+                    const match = e.message.match(/at position (\d+)/);
+                    let position = -1;
+                    if (match && match[1]) {
+                        position = parseInt(match[1], 10);
+                    } else {
+                        const lineColMatch = e.message.match(/line (\d+) column (\d+)/);
+                        if (lineColMatch && lineColMatch[1] && lineColMatch[2]) {
+                            const lineNum = parseInt(lineColMatch[1], 10);
+                            const colNum = parseInt(lineColMatch[2], 10);
+                            errorMessage = `Error at Line ${lineNum}, Column ${colNum}: ${e.message}`;
+                        }
+                    }
+
+                    if (position !== -1 && errorMessage === '') {
+                        let line = 1;
+                        let column = 1;
+                        for (let i = 0; i < position; i++) {
+                            if (jsonString[i] === '\n') {
+                                line++;
+                                column = 1;
+                            } else {
+                                column++;
+                            }
+                        }
+                        errorMessage = `Error at Line ${line}, Column ${column}: ${e.message}`;
+                    } else if (errorMessage === '') {
+                        errorMessage = e.message;
+                    }
+                }
+
+                if (this._errorDisplayElement) {
+                    this._errorDisplayElement.textContent = errorMessage;
+                } else if (error) {
+                    console.error('JSON Lint Error:', errorMessage);
+                }
+
+                if (this._statusIndicator) {
+                    this._statusIndicator.classList.toggle('valid', this._isValid);
+                    this._statusIndicator.classList.toggle('invalid', !this._isValid);
+                    if (this._statusText) {
+                        this._statusText.textContent = this._isValid ? 'Valid JSON' : 'Invalid JSON';
+                    }
+                }
+
+                if (typeof this.options.onLintResult === 'function') {
+                    this.options.onLintResult(this._isValid, error);
+                }
+
+                if (this._isValid && newParsedValue !== null) {
+                    const hasValueChanged = JSON.stringify(this._parsedValue) !== JSON.stringify(newParsedValue);
+                    if (hasValueChanged) {
+                        this._parsedValue = newParsedValue;
+                        if (typeof this.options.onValueChange === 'function') {
+                            this.options.onValueChange(this._parsedValue);
+                        }
+                    }
+                } else if (!this._isValid) {
+                    this._parsedValue = null;
+                }
+            };
+
+            JSONEditor.prototype._sortObjectKeys = function (obj) {
+                if (typeof obj !== 'object' || obj === null) {
+                    return obj;
+                }
+                if (Array.isArray(obj)) {
+                    return obj.map(item => this._sortObjectKeys(item));
+                }
+
+                const sortedKeys = Object.keys(obj).sort();
+                const newObj = {};
+                for (const key of sortedKeys) {
+                    newObj[key] = this._sortObjectKeys(obj[key]);
+                }
+                return newObj;
+            };
+
+            JSONEditor.prototype.getValue = function () {
+                return this._parsedValue;
+            };
+
+            JSONEditor.prototype.setValue = function (jsonStringOrObject) {
+                let newContent = '';
+                let valueToParse = jsonStringOrObject;
+
+                if (typeof jsonStringOrObject === 'object' && jsonStringOrObject !== null) {
+                    if (this._currentSortKeys) {
+                        valueToParse = this._sortObjectKeys(valueToParse);
+                    }
+                    try {
+                        newContent = JSON.stringify(valueToParse, null, this._currentIndentationSpaces);
+                    } catch (e) {
+                        console.error('Error stringifying object for setValue:', e);
+                        newContent = String(jsonStringOrObject);
+                    }
+                } else if (typeof jsonStringOrObject === 'string') {
+                    try {
+                        const parsed = JSON.parse(jsonStringOrObject);
+                        if (this._currentSortKeys) {
+                            valueToParse = this._sortObjectKeys(parsed);
+                        } else {
+                            valueToParse = parsed;
+                        }
+                        newContent = JSON.stringify(valueToParse, null, this._currentIndentationSpaces);
+                    } catch (e) {
+                        newContent = jsonStringOrObject;
+                    }
+                } else {
+                    newContent = '';
+                }
+                this.textarea.value = newContent;
+                this._lint();
+                this._updateLineNumbers();
+            };
+
+            JSONEditor.prototype.format = function () {
+                const jsonString = this.textarea.value;
+                try {
+                    if (jsonString.trim() !== '') {
+                        let parsed = JSON.parse(jsonString);
+                        if (this._currentSortKeys) {
+                            parsed = this._sortObjectKeys(parsed);
+                        }
+                        this.textarea.value = JSON.stringify(parsed, null, this._currentIndentationSpaces);
+                    }
+                    this._lint();
+                    this._updateLineNumbers();
+                } catch (e) {
+                    this._lint();
+                }
+            };
+
+            JSONEditor.prototype.isValid = function () {
+                return this._isValid;
+            };
+
+            JSONEditor.prototype.destroy = function () {
+                this.textarea.removeEventListener('input', this._onInputHandler);
+                this.textarea.removeEventListener('scroll', this._onScrollHandler);
+                window.removeEventListener('resize', this._onScrollHandler);
+
+                const formatButton = document.getElementById('format-button');
+                if (formatButton) {
+                    formatButton.removeEventListener('click', this._formatHandler);
+                }
+                if (this._indentationSpacesInput) {
+                    this._indentationSpacesInput.removeEventListener('change', this._onFormatSettingsChangeHandler);
+                    this._indentationSpacesInput.removeEventListener('input', this._onFormatSettingsChangeHandler);
+                }
+                if (this._sortKeysCheckbox) {
+                    this._sortKeysCheckbox.removeEventListener('change', this._onFormatSettingsChangeHandler);
+                }
+
+                clearTimeout(this._lintTimeout);
+
+                if (this._errorDisplayElement) {
+                    this._errorDisplayElement.textContent = '';
+                }
+                if (this._lineNumbersElement) {
+                    this._lineNumbersElement.textContent = '';
+                }
+                if (this._statusIndicator) {
+                    this._statusIndicator.classList.remove('valid', 'invalid');
+                    if (this._statusText) {
+                        this._statusText.textContent = '';
+                    }
+                }
+                this.textarea = null;
+                this._errorDisplayElement = null;
+                this._lineNumbersElement = null;
+                this._indentationSpacesInput = null;
+                this._sortKeysCheckbox = null;
+                this._statusIndicator = null;
+                this._statusDot = null;
+                this._statusText = null;
+            };
+
+            window.JSONEditorModule = {
+                init: function (textareaId, options) {
+                    const textarea = document.getElementById(textareaId);
+                    if (!textarea) {
+                        console.error(`JSONEditorModule: Textarea with ID "${textareaId}" not found.`);
+                        return null;
+                    }
+                    return new JSONEditor(textarea, {
+                        ...options,
+                        lineNumbersElementId: options.lineNumbersElementId || 'line-numbers',
+                        indentationSpacesElementId: options.indentationSpacesElementId || 'indentation-spaces',
+                        sortKeysElementId: options.sortKeysElementId || 'sort-keys'
+                    });
+                }
+            };
+        })();
+
+        // --- Example Usage ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const editor = JSONEditorModule.init('json-input', {
+                lintDelay: 700, // Custom linting delay
+                prettyPrintOnLoad: true,
+                errorDisplayElementId: 'json-error-message',
+                onLintResult: (isValid, error) => {
+                    // console.log('Lint Result:', isValid, error ? error.message : 'No error');
+                    // The UI elements (status indicator, error message div) are updated internally by the module.
+                },
+                onValueChange: (parsedValue) => {
+                    console.log('JSON Value Changed:', parsedValue);
+                    // You can use this callback to update other parts of your application
+                    // with the valid, parsed JSON data.
+                }
+            });
+
+            // You can interact with the editor instance programmatically:
+            // editor.setValue({ "new": "data", "array": [1, 2, 3] });
+            // console.log("Current JSON value:", editor.getValue());
+            // console.log("Is JSON valid?", editor.isValid());
+
+            // To demonstrate destroy:
+            // setTimeout(() => {
+            //     console.log('Destroying editor in 10 seconds...');
+            //     editor.destroy();
+            // }, 10000);
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const editor = JSONEditorModule.init('json-input', {
+                lintDelay: 700,
+                prettyPrintOnLoad: true,
+                errorDisplayElementId: 'json-error-message',
+                onLintResult: (isValid, error) => {
+                },
+                onValueChange: (parsedValue) => {
+                    console.log('JSON Value Changed:', parsedValue);
+                }
+            });
+
+            const storageAdapterSelect = document.getElementById('storage-adapter-select');
+            const storageEntityInput = document.getElementById('storage-entity-input');
+            const storeButton = document.getElementById('store-button');
+            const retrieveButton = document.getElementById('retrieve-button');
+            const updateButton = document.getElementById('update-button');
+            const deleteButton = document.getElementById('delete-button');
+            const storageMessageDiv = document.getElementById('storage-message');
+
+            await StorageManager.init(storageAdapterSelect.value);
+
+            function showStorageMessage(message, type) {
+                storageMessageDiv.textContent = message;
+                storageMessageDiv.className = `storage-message ${type}`;
+                setTimeout(() => {
+                    storageMessageDiv.className = 'storage-message';
+                }, 3000);
+            }
+
+            storageAdapterSelect.addEventListener('change', (event) => {
+                try {
+                    StorageManager.setAdapter(event.target.value);
+                    showStorageMessage(`Storage adapter changed to: ${event.target.value}`, 'success');
+                } catch (error) {
+                    console.error('Failed to set storage adapter:', error);
+                    showStorageMessage(`Error setting adapter: ${error.message}`, 'error');
+                }
+            });
+
+            storeButton.addEventListener('click', async () => {
+                const entity = storageEntityInput.value.trim();
+                const data = editor.getValue();
+
+                if (!entity) {
+                    showStorageMessage('Please enter an Entity/Key Name.', 'error');
+                    return;
+                }
+                if (!editor.isValid() || data === null) {
+                    showStorageMessage('Invalid JSON in editor. Cannot store.', 'error');
+                    return;
+                }
+
+                try {
+                    await StorageManager.store(entity, data);
+                    showStorageMessage(`Successfully stored data for "${entity}" using ${storageAdapterSelect.value}.`, 'success');
+                } catch (error) {
+                    console.error('Store error:', error);
+                    showStorageMessage(`Failed to store data: ${error.message}`, 'error');
+                }
+            });
+
+            retrieveButton.addEventListener('click', async () => {
+                const entity = storageEntityInput.value.trim();
+                if (!entity) {
+                    showStorageMessage('Please enter an Entity/Key Name.', 'error');
+                    return;
+                }
+
+                try {
+                    const data = await StorageManager.retrieve(entity);
+                    if (data !== null) {
+                        editor.setValue(data);
+                        showStorageMessage(`Successfully retrieved data for "${entity}" using ${storageAdapterSelect.value}.`, 'success');
+                    } else {
+                        showStorageMessage(`No data found for "${entity}" using ${storageAdapterSelect.value}.`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Retrieve error:', error);
+                    showStorageMessage(`Failed to retrieve data: ${error.message}`, 'error');
+                }
+            });
+
+            updateButton.addEventListener('click', async () => {
+                const entity = storageEntityInput.value.trim();
+                const data = editor.getValue();
+
+                if (!entity) {
+                    showStorageMessage('Please enter an Entity/Key Name.', 'error');
+                    return;
+                }
+                if (!editor.isValid() || data === null) {
+                    showStorageMessage('Invalid JSON in editor. Cannot update.', 'error');
+                    return;
+                }
+
+                try {
+                    await StorageManager.update(entity, data);
+                    showStorageMessage(`Successfully updated data for "${entity}" using ${storageAdapterSelect.value}.`, 'success');
+                } catch (error) {
+                    console.error('Update error:', error);
+                    showStorageMessage(`Failed to update data: ${error.message}`, 'error');
+                }
+            });
+
+            deleteButton.addEventListener('click', async () => {
+                const entity = storageEntityInput.value.trim();
+                if (!entity) {
+                    showStorageMessage('Please enter an Entity/Key Name.', 'error');
+                    return;
+                }
+
+                try {
+                    await StorageManager.delete(entity);
+                    showStorageMessage(`Successfully deleted data for "${entity}" using ${storageAdapterSelect.value}.`, 'success');
+                } catch (error) {
+                    console.error('Delete error:', error);
+                    showStorageMessage(`Failed to delete data: ${error.message}`, 'error');
+                }
+            });
+
+            // Example of programmatic interaction (uncomment to test)
+            // editor.setValue({ "new": "data", "array": [1, 2, 3] });
+            // console.log("Current JSON value:", editor.getValue());
+            // console.log("Is JSON valid?", editor.isValid());
+
+            // Example of destroying the editor (uncomment to test)
+            // setTimeout(() => {
+            //     console.log('Destroying editor in 10 seconds...');
+            //     editor.destroy();
+            // }, 10000);
+        });
+
+    </script>
+</body>
+
+</html>

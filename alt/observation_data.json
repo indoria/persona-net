@@ -1,0 +1,41 @@
+[
+  {
+    "content": "Barkha Dutt's report from a rural village during the migrant crisis, highlighting the plight of daily wage earners and questioning government relief efforts. Very empathetic and focused on human impact.",
+    "attribute_scores": {
+      "core_attributes.core_principles_and_values.Amplifying Marginalized Voices.weight": 5,
+      "core_attributes.core_principles_and_values.Human-Centric Storytelling.weight": 5,
+      "core_attributes.core_principles_and_values.Holding Power Accountable.weight": 4,
+      "communication_linguistic_style.overall_tone.primary_tone": { "Empathetic": 5 },
+      "communication_linguistic_style.overall_tone.secondary_tones": { "Skeptical (towards official narratives)": 4 },
+      "personality_behavioral_modeling.dominant_personality_traits.Openness to Experience.weight": 4,
+      "personality_behavioral_modeling.biases_and_tendencies.Impact-Oriented Bias.weight": 5
+    },
+    "max_score_per_attribute": 5
+  },
+  {
+    "content": "An interview with a cabinet minister where Barkha Dutt presses hard on economic policy failures, demands data, and exposes inconsistencies in previous statements. Very direct, analytical, and assertive.",
+    "attribute_scores": {
+      "core_attributes.core_principles_and_values.Fearless Pursuit of Truth.weight": 5,
+      "core_attributes.core_principles_and_values.Holding Power Accountable.weight": 5,
+      "communication_linguistic_style.overall_tone.primary_tone": { "Direct": 5 },
+      "communication_linguistic_style.overall_tone.secondary_tones": { "Assertive": 5, "Analytical": 5 },
+      "communication_linguistic_style.persuasion_tactics": { "Data-driven argumentation": 5, "Logical reasoning and unearthing inconsistencies": 5 },
+      "personality_behavioral_modeling.dominant_personality_traits.Assertiveness (part of Extraversion).weight": 5,
+      "personality_behavioral_modeling.biases_and_tendencies.Skepticism of Authority.weight": 5
+    },
+    "max_score_per_attribute": 5
+  },
+  {
+    "content": "A Mojo Story deep-dive video report on judicial independence in India, citing constitutional experts and historical precedents. Highly analytical, emphasizes institutional integrity.",
+    "attribute_scores": {
+      "core_attributes.core_principles_and_values.Independent Journalism.weight": 5,
+      "core_attributes.core_principles_and_values.Holding Power Accountable.weight": 4,
+      "communication_linguistic_style.overall_tone.primary_tone": { "Analytical": 5 },
+      "communication_linguistic_style.vocabulary_usage.allusions_and_references.classes.historic": { "usage": 4 },
+      "communication_linguistic_style.vocabulary_usage.allusions_and_references.classes.indian_political_socio_cultural": { "usage": 5 },
+      "personality_behavioral_modeling.dominant_personality_traits.Conscientiousness.weight": 4,
+      "cognitive_information_processing.key_thematic_focus_areas": { "The fragility and resilience of democratic institutions in India.weight": 5 }
+    },
+    "max_score_per_attribute": 5
+  }
+]

@@ -1,86 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>PR AI Persona POC</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        textarea { width: 100%; }
-        .response { background: #f9f9f9; border: 1px solid #ddd; padding: 1em; margin-top: 1em; }
-        label { font-weight: bold; }
-        .container { max-width: 700px; margin: auto; }
-        select, textarea { margin-bottom: 1em; }
-        .loader {
-            display: none;
-            border: 6px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 6px solid #3498db;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg);}
-            100% { transform: rotate(360deg);}
-        }
-    </style>
-    <script>
-        function setPitchFromSelector() {
-            var selector = document.getElementById('pitch_selector');
-            var textarea = document.getElementById('pitch_textarea');
-            if (selector.value !== "") {
-                textarea.value = selector.value;
-            }
-        }
-
-        function submitForm(event) {
-            event.preventDefault();
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('responses').innerHTML = '';
-            let pitch = document.getElementById('pitch_textarea').value;
-            let journalistEls = document.getElementById('journalist');
-            let journalists = Array.from(journalistEls.selectedOptions).map(opt => opt.value);
-
-            fetch('/query_persona', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    pitch: pitch,
-                    journalists: journalists
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('loader').style.display = 'none';
-                let html = '';
-                if (data.responses && data.responses.length > 0) {
-                    data.responses.forEach(function(resp) {
-                        html += `<div class="response"><h2>${resp.name}</h2><p>${resp.response}</p></div>`;
-                    });
-                } else {
-                    html = "<div class='response'>No response received.</div>";
-                }
-                document.getElementById('responses').innerHTML = html;
-            })
-            .catch(err => {
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('responses').innerHTML = "<div class='response'>Error occurred. Try again.</div>";
-            });
-        }
-    </script>
-</head>
-<body>
-    {% include "nav.html" %}
-    <div class="container">
-        <h1>PR Journalist AI Persona Demo</h1>
-        <form id="prForm" onsubmit="submitForm(event)">
-            <label for="pitch_selector">Select a sample PR pitch:</label><br>
-            <select id="pitch_selector" onchange="setPitchFromSelector()">
-                <option value="">-- Choose a sample pitch or write your own below --</option>
-                <option value="Hi,
+{% include "header.html" %}
+<div class="container home_page">
+    <h1>PR Journalist AI Persona Demo</h1>
+    <form id="prForm" onsubmit="submitForm(event)">
+        <label for="pitch_selector">Select a sample PR pitch:</label><br>
+        <select id="pitch_selector" onchange="setPitchFromSelector()">
+            <option value="">-- Choose a sample pitch or write your own below --</option>
+            <option value="Hi,
 
 Hope you’re doing well! I wanted to share a story that I think could be a strong fit for your coverage of workplace tools and the future of work.
 
@@ -97,7 +22,7 @@ We’d love to offer you an early look or exclusive interview with our co-founde
 Let me know if you’d be interested in chatting or need more details. Happy to send over our press kit or set up a quick call.
 
 Thanks so much for your time!">TaskPilot async work platform launch</option>
-                <option value="Hello,
+            <option value="Hello,
 
 Excited to let you know that EcoCharge, the world’s first fully biodegradable portable phone charger, is now available for pre-order.
 
@@ -106,7 +31,7 @@ EcoCharge is made from 100% plant-based materials, yet delivers the same fast-ch
 If you’d like to test EcoCharge, we can send a review unit and connect you with our founder, Lisa Tran, for a sustainability-focused interview.
 
 Look forward to hearing your thoughts!">EcoCharge biodegradable charger launch</option>
-                <option value="Hi,
+            <option value="Hi,
 
 I’m reaching out to share the story of Artly, a new AI-powered app helping creators instantly turn sketches into polished digital illustrations.
 
@@ -115,7 +40,7 @@ Artly launched last month and has already been adopted by over 15,000 designers 
 If you’re interested, we can offer exclusive early access and an interview with our CTO, Dr. Rahul Gupta, to discuss the intersection of AI and creativity.
 
 Thank you for considering!">Artly AI drawing app launch</option>
-                <option value="Hi,
+            <option value="Hi,
 
 I wanted to introduce you to WellNest, a mental wellness platform that just raised $12M in Series A funding led by Thrive Ventures.
 
@@ -124,7 +49,7 @@ WellNest uses a science-backed approach to help users build healthier habits thr
 We’d be happy to set up a demo and connect you with our CEO, Priya Desai, for a story on the growth of digital wellness.
 
 Let us know if you’d like more info or the full press kit!">WellNest mental wellness platform funding</option>
-                <option value="Hello,
+            <option value="Hello,
 
 Wanted to share news on Shoply, a new e-commerce analytics tool helping small businesses boost online sales through real-time data and AI-powered recommendations.
 
@@ -133,23 +58,69 @@ Shoply customers have reported a 25% increase in conversions since using the too
 If you’re open to a briefing or would like more details, just let me know!
 
 Thank you for your consideration.">Shoply e-commerce analytics tool launch</option>
-            </select>
-            <br>
+        </select>
+        <br>
 
-            <label for="pitch_textarea">Or write your own pitch:</label><br>
-            <textarea id="pitch_textarea" name="pitch" rows="8" required></textarea><br>
+        <label for="pitch_textarea">Or write your own pitch:</label><br>
+        <textarea id="pitch_textarea" name="pitch" rows="8" required></textarea><br>
 
-            <label for="journalist">Choose one or more journalists:</label>
-            <select name="journalist" id="journalist" multiple size="4" required>
-                {% for j in journalists %}
-                    <option value="{{j.id}}">{{j.name}}</option>
-                {% endfor %}
-            </select>
-            <br><br>
-            <button type="submit">Submit</button>
-        </form>
-        <div id="loader" class="loader"></div>
-        <div id="responses"></div>
-    </div>
-</body>
-</html>
+        <label for="journalist">Choose one or more journalists:</label>
+        <select name="journalist" id="journalist" multiple size="4" required>
+            {% for j in journalists %}
+                <option value="{{j.id}}">{{j.name}}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="loader" class="loader"></div>
+    <div id="responses"></div>
+</div>
+<script>
+    function setPitchFromSelector() {
+        var selector = document.getElementById('pitch_selector');
+        var textarea = document.getElementById('pitch_textarea');
+        if (selector.value !== "") {
+            textarea.value = selector.value;
+        }
+    }
+
+    function submitForm(event) {
+        event.preventDefault();
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('responses').innerHTML = '';
+        let pitch = document.getElementById('pitch_textarea').value;
+        let journalistEls = document.getElementById('journalist');
+        let journalists = Array.from(journalistEls.selectedOptions).map(opt => opt.value);
+
+        fetch('/query_persona', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                pitch: pitch,
+                journalists: journalists
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loader').style.display = 'none';
+            let html = '';
+            if (data.responses && data.responses.length > 0) {
+                data.responses.forEach(function(resp) {
+                    html += `<div class="response"><h2>${resp.name}</h2><p>${resp.response}</p></div>`;
+                });
+            } else {
+                html = "<div class='response'>No response received.</div>";
+            }
+            document.getElementById('responses').innerHTML = html;
+        })
+        .catch(err => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('responses').innerHTML = "<div class='response'>Error occurred. Try again.</div>";
+        });
+    }
+</script>
+{% include "footer.html" %}

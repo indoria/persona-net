@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models import Base, Journalist, Interaction
 from ai_persona import persona_response
-import os
+import os, sys
 
 app = Flask(__name__)
 
@@ -15,6 +15,7 @@ Session = scoped_session(sessionmaker(engine, future=True))
 def index():
     with Session() as session:
         journalists = session.query(Journalist).all()
+        print(journalists, file=sys.stdout)
         return render_template("index.html", journalists=journalists)
 
 @app.route("/query_persona", methods=["POST"])
@@ -69,4 +70,4 @@ def persona():
     return render_template("persona.html", personas=personas)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8000)

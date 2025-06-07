@@ -1,0 +1,330 @@
+graph TB
+
+%% ─────── Core Development ───────
+subgraph Core Development
+    direction TB
+    subgraph Code Repository
+        direction TB
+        GITHUB[GitHub]
+        GITLAB[GitLab]
+        BITBUCKET[Bitbucket]
+    end
+
+    subgraph Development Environment
+        direction TB
+        VSCODE[VS Code]
+        CODESPACES[Codespaces]
+        JUPYTER[JupyterLab]
+        CONDA[Conda]
+        POETRY[Poetry]
+        DOCKER[Docker]
+
+        subgraph Interactive Notebooks & Prototyping
+            direction TB
+            COLAB[Google Colab]
+            KAGGLE[Kaggle Notebooks]
+            DATABRICKS[DatabrICKS]
+            DEEPNOTE[Deepnote]
+            PAPERSPACE[Paperspace]
+        end
+
+        subgraph Sandbox & Practice Environments
+            direction TB
+            DOCKER_PLAYGROUND[Play with Docker]
+            GITHUB_CODESPACES_SANDBOX["GitHub Codespaces (Sandbox)"]
+            CODEPEN[CodePen]
+        end
+    end
+
+    subgraph Task Tracking
+        direction TB
+        JIRA[Jira]
+        TRELLO[Trello]
+        LINEAR[Linear]
+        AZURE_DEVOPS_BOARDS[Azure DevOps Boards]
+    end
+
+    subgraph Documentation & Knowledge Base
+        direction TB
+        NOTION[Notion]
+        CONFLUENCE[Confluence]
+        SLACK[Slack]
+    end
+end
+
+%% ─────── CI/CD & Orchestration ───────
+subgraph CI/CD & Workflow Orchestration
+    direction TB
+    GHA[GitHub Actions]
+    GLCI[GitLab CI]
+    CIRCLE[CircleCI]
+    ARGO_CD[Argo CD]
+    JENKINS[Jenkins]
+end
+
+%% ─────── Application Runtime & APIs ───────
+subgraph Application Runtime & APIs
+    direction TB
+    PYTHON[Python + PyPI]
+    FASTAPI[FastAPI]
+    FLASK[Flask]
+    GUNICORN[Gunicorn]
+    NGINX[Nginx]
+    NODEJS[Node.js]
+    SPRING_BOOT[Spring Boot]
+    KAFKA[Apache Kafka]
+end
+
+%% ─────── Cloud Infrastructure & Deployment ───────
+subgraph Cloud Infrastructure & Deployment
+    direction TB
+    subgraph Cloud Platforms
+        direction TB
+        GCP[GCP]
+        AWS[AWS]
+        AZURE[Azure]
+    end
+
+    subgraph Container & Model Deployment
+        direction TB
+        KUBERNETES[Kubernetes]
+        OPENSHIFT[OpenShift]
+        MODAL[Modal]
+        REPLICATE[Replicate]
+        BASETEN[Baseten]
+    end
+end
+
+%% ─────── AI/ML Lifecycle ───────
+subgraph AI/ML Lifecycle
+    direction TB
+    subgraph MLOps & Experiment Tracking
+        direction TB
+        WANDB[Weights & Biases]
+        MLFLOW[MLflow]
+        DVC[DVC]
+        COMET_ML[Comet ML]
+        SAGE_MAKER[AWS SageMaker]
+    end
+
+    subgraph ML Compute & Inference
+        direction TB
+        LAMBDA[Lambda Labs]
+        RUNPOD[RunPod]
+        TPU[GCP TPU]
+        RAY[RAY Serve]
+        TRITON[Triton]
+        HF[HuggingFace]
+        ONNX[ONNX Runtime]
+        AWS_INFERENCE[AWS Inference]
+        GCP_AI_PLATFORM[GCP AI Platform]
+    end
+end
+
+%% ─────── Data Stack ───────
+subgraph Data Stack
+    direction TB
+    subgraph Databases
+        direction TB
+        POSTGRES[Postgres]
+        MONGO[MongoDB]
+        FIREBASEDB[Firebase DB]
+        REDIS[Redis]
+        ELASTICSEARCH[Elasticsearch]
+    end
+
+    subgraph Object Storage
+        direction TB
+        S3[S3]
+        GCS[GCS]
+        BLOB[Azure Blob]
+    end
+
+    subgraph Data Orchestration & Warehousing
+        direction TB
+        AIRBYTE[Airbyte]
+        DAGSTER[Dagster]
+        PREFECT[Prefect]
+        APACHE_SPARK[Apache Spark]
+        SNOWFLAKE[Snowflake]
+    end
+end
+
+%% ─────── Enterprise Capabilities ───────
+subgraph Enterprise Capabilities
+    direction TB
+    subgraph Observability & Logging
+        direction TB
+        PROM[Prometheus]
+        GRAFANA[Grafana]
+        ELK[ELK Stack]
+        DATADOG[Datadog]
+        SENTRY[Sentry]
+        NEW_RELIC[New Relic]
+        SPLUNK[Splunk]
+    end
+
+    subgraph Identity & Access Management
+        direction TB
+        AUTH0[Auth0]
+        FIREAUTH[Firebase Auth]
+        CLERK[Clerk]
+        OKTA[Okta]
+        MICROSOFT_ENTRA[Microsoft Entra ID]
+    end
+
+    subgraph Secrets Management
+        direction TB
+        VAULT[Vault]
+        AWSSECRETS[AWS Secrets]
+        GCPSECRETS[GCP Secrets]
+        AZURE_KEY_VAULT[Azure Key Vault]
+    end
+
+    subgraph Messaging & Notifications
+        direction TB
+        SENDGRID[SendGrid]
+        MAILGUN[Mailgun]
+        TWILIO[Twilio]
+        FCM[Firebase Cloud Messaging]
+        ONESIGNAL[OneSignal]
+        AWS_SNS[AWS SNS]
+        GCP_PUBSUB[GCP Pub/Sub]
+    end
+
+    subgraph Payments & Billing
+        direction TB
+        STRIPE[Stripe]
+        RAZORPAY[Razorpay]
+        CHARGEBEE[Chargebee]
+    end
+
+    subgraph Product Analytics
+        direction TB
+        POSTHOG[PostHog]
+        MIXPANEL[Mixpanel]
+        GA[Google Analytics]
+        AMPLITUDE[Amplitude]
+    end
+end
+
+%% ─────── Links ───────
+click GITHUB "https://github.com" _blank
+click GITLAB "https://gitlab.com" _blank
+click BITBUCKET "https://bitbucket.org" _blank
+click GHA "https://github.com/features/actions" _blank
+click GLCI "https://docs.gitlab.com/ee/ci/" _blank
+click CIRCLE "https://circleci.com" _blank
+click ARGO_CD "https://argoproj.github.io/cd/" _blank
+click JENKINS "https://www.jenkins.io/" _blank
+
+click NOTION "https://www.notion.so" _blank
+click CONFLUENCE "https://www.atlassian.com/software/confluence" _blank
+click SLACK "https://slack.com/" _blank
+click JIRA "https://www.atlassian.com/software/jira" _blank
+click TRELLO "https://trello.com" _blank
+click LINEAR "https://linear.app" _blank
+click AZURE_DEVOPS_BOARDS "https://azure.microsoft.com/en-in/products/devops/boards/" _blank
+
+click VSCODE "https://vscode.dev" _blank
+click CODESPACES "https://github.com/features/codespaces" _blank
+click JUPYTER "https://jupyter.org" _blank
+click CONDA "https://docs.conda.io" _blank
+click POETRY "https://python-poetry.org" _blank
+click DOCKER "https://www.docker.com" _blank
+
+click COLAB "https://colab.research.google.com/" _blank
+click KAGGLE "https://www.kaggle.com/code" _blank
+click DATABRICKS "https://www.databricks.com/" _blank
+click DEEPNOTE "https://deepnote.com/" _blank
+click PAPERSPACE "https://www.paperspace.com/" _blank
+
+click DOCKER_PLAYGROUND "https://labs.play-with-docker.com/" _blank
+click GITHUB_CODESPACES_SANDBOX "https://github.com/features/codespaces" _blank
+click CODEPEN "https://codepen.io/" _blank
+
+click PYTHON "https://pypi.org" _blank
+click FASTAPI "https://fastapi.tiangolo.com" _blank
+click FLASK "https://flask.palletsprojects.com" _blank
+click GUNICORN "https://gunicorn.org" _blank
+click NGINX "https://nginx.org" _blank
+click NODEJS "https://nodejs.org/" _blank
+click SPRING_BOOT "https://spring.io/projects/spring-boot" _blank
+click KAFKA "https://kafka.apache.org/" _blank
+
+click GCP "https://cloud.google.com" _blank
+click AWS "https://aws.amazon.com" _blank
+click AZURE "https://azure.microsoft.com" _blank
+click KUBERNETES "https://kubernetes.io/" _blank
+click OPENSHIFT "https://www.openshift.com/" _blank
+click MODAL "https://modal.com" _blank
+click REPLICATE "https://replicate.com" _blank
+click BASETEN "https://www.baseten.co" _blank
+
+click WANDB "https://wandb.ai" _blank
+click MLFLOW "https://mlflow.org" _blank
+click DVC "https://dvc.org" _blank
+click COMET_ML "https://www.comet.com/" _blank
+click SAGE_MAKER "https://aws.amazon.com/sagemaker/" _blank
+
+click LAMBDA "https://www.lambdalabs.com" _blank
+click RUNPOD "https://www.runpod.io" _blank
+click TPU "https://cloud.google.com/tpu" _blank
+click RAY "https://www.ray.io/ray-serve" _blank
+click TRITON "https://developer.nvidia.com/nvidia-triton-inference-server" _blank
+click HF "https://huggingface.co" _blank
+click ONNX "https://onnxruntime.ai/" _blank
+click AWS_INFERENCE "https://aws.amazon.com/machine-learning/inference/" _blank
+click GCP_AI_PLATFORM "https://cloud.google.com/ai-platform" _blank
+
+click POSTGRES "https://www.postgresql.org" _blank
+click MONGO "https://www.mongodb.com" _blank
+click FIREBASEDB "https://firebase.google.com/products/firestore" _blank
+click REDIS "https://redis.io/" _blank
+click ELASTICSEARCH "https://www.elastic.co/elasticsearch/" _blank
+
+click S3 "https://aws.amazon.com/s3" _blank
+click GCS "https://cloud.google.com/storage" _blank
+click BLOB "https://azure.microsoft.com/en-us/products/storage/blobs" _blank
+
+click AIRBYTE "https://airbyte.com" _blank
+click DAGSTER "https://dagster.io" _blank
+click PREFECT "https://www.prefect.io" _blank
+click APACHE_SPARK "https://spark.apache.org/" _blank
+click SNOWFLAKE "https://www.snowflake.com/" _blank
+
+click PROM "https://prometheus.io" _blank
+click GRAFANA "https://grafana.com" _blank
+click ELK "https://www.elastic.co/what-is/elk-stack" _blank
+click DATADOG "https://www.datadoghq.com" _blank
+click SENTRY "https://sentry.io" _blank
+click NEW_RELIC "https://newrelic.com/" _blank
+click SPLUNK "https://www.splunk.com/" _blank
+
+click AUTH0 "https://auth0.com" _blank
+click FIREAUTH "https://firebase.google.com/products/auth" _blank
+click CLERK "https://clerk.dev" _blank
+click OKTA "https://www.okta.com/" _blank
+click MICROSOFT_ENTRA "https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id" _blank
+
+click VAULT "https://www.vaultproject.io" _blank
+click AWSSECRETS "https://aws.amazon.com/secrets-manager/" _blank
+click GCPSECRETS "https://cloud.google.com/secret-manager" _blank
+click AZURE_KEY_VAULT "https://azure.microsoft.com/en-us/products/key-vault/" _blank
+
+click SENDGRID "https://sendgrid.com" _blank
+click MAILGUN "https://www.mailgun.com" _blank
+click TWILIO "https://www.twilio.com" _blank
+click FCM "https://firebase.google.com/products/cloud-messaging" _blank
+click ONESIGNAL "https://onesignal.com" _blank
+click AWS_SNS "https://aws.amazon.com/sns/" _blank
+click GCP_PUBSUB "https://cloud.google.com/pubsub" _blank
+
+click STRIPE "https://stripe.com" _blank
+click RAZORPAY "https://razorpay.com" _blank
+click CHARGEBEE "https://www.chargebee.com" _blank
+
+click POSTHOG "https://posthog.com" _blank
+click MIXPANEL "https://mixpanel.com" _blank
+click GA "https://analytics.google.com" _blank
+click AMPLITUDE "https://amplitude.com/" _blank

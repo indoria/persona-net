@@ -4,3 +4,4 @@ spacy
 transformers
 torch
 nltk
+gunicorn

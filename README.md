@@ -41,7 +41,7 @@ python seed_personas.py
 python app.py
 ```
 Visit: http://127.0.0.1:5000
-
+http://130.131.50.173:8080/proxy/5000/
 ---
 
 ## en_core_web_sm
@@ -94,3 +94,33 @@ en_core_web_sm is a small English language model in spaCy, a popular Python libr
 - Enhance persona model using ML fine-tuning.
 - Improve UI for multi-turn conversation.
 - Package for cloud deployment (e.g., Docker, AWS EB).
+
+
+
+```text
+# /etc/systemd/system/persona-net
+[Unit]
+Description=Persona Net Flask App
+After=network.target
+
+[Service]
+User=azureuser
+WorkingDirectory=/home/azureuser/persona-net
+ExecStart=/home/azureuser/persona-net/venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 --access-logfile - --error-logfile - app:app
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+sudo systemctl daemon-reload
+sudo systemctl enable persona-net
+sudo systemctl start persona-net
+sudo systemctl status persona-net
+
+journalctl -u persona-net.service -f
+```

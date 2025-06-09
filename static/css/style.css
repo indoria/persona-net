@@ -39,7 +39,7 @@ body {
 }
 
 /* index.html */
-.home_page.response {
+.home_page .response {
     background: #f9f9f9;
     border: 1px solid #ddd;
     padding: 1em;

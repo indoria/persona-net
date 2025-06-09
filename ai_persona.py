@@ -8,7 +8,11 @@ summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6", fr
 
 def extract_topics(pitch_text):
     doc = nlp(pitch_text)
+    
+    print(doc.ents)
     topics = [ent.text for ent in doc.ents if ent.label_ in ("ORG", "PRODUCT", "PERSON")]
+    print(topics)
+
     return topics if topics else ["your topic"]
 
 def persona_response(journalist, pitch_text, conversation_history=None):
